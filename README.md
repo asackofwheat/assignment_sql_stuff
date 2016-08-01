@@ -207,13 +207,92 @@ SELECT id,stadium,team1,team2
 WHERE id = 1012
 
 3. Modify it to show the player, teamid, stadium and mdate and for every German goal.
+
+SELECT player,teamid, stadium, mdate
+  FROM game JOIN goal ON (id=matchid)
+  WHERE teamid = 'GER'
+
 4. Show the team1, team2 and player for every goal scored by a player called Mario player LIKE 'Mario%'
+
+SELECT team1, team2, player
+  FROM game JOIN goal ON (id=matchid)
+  WHERE player LIKE 'Mario%'
+
 5. Show player, teamid, coach, gtime for all goals scored in the first 10 minutes gtime<=10
+
+SELECT player, teamid, coach, gtime
+  FROM goal JOIN eteam on teamid=id
+ WHERE gtime<=10
+
 6. List the the dates of the matches and the name of the team in which 'Fernando Santos' was the team1 coach.
+
+SELECT mdate, teamname
+FROM game JOIN eteam ON (team1=eteam.id)
+WHERE coach = 'Fernando Santos'
+
 7. List the player for every goal scored in a game where the stadium was 'National Stadium, Warsaw'
+
+SELECT player
+FROM goal JOIN game ON (matchid=game.id)
+WHERE stadium = 'National Stadium, Warsaw'
+
 8. Instead show the name of all players who scored a goal against Germany.
+
+SELECT DISTINCT player
+  FROM game JOIN goal ON matchid = id 
+    WHERE (team1='GER' OR team2='GER') AND
+    NOT teamid = 'GER'
+
 9. Show teamname and the total number of goals scored.
+
+SELECT teamname, COUNT(*)
+  FROM eteam JOIN goal ON id=teamid
+ GROUP BY teamname
+
 10. Show the stadium and the number of goals scored in each stadium.
+
+SELECT stadium, COUNT(matchid)
+FROM game JOIN goal ON (id=matchid)
+GROUP BY stadium
+
 11. For every match involving 'POL', show the matchid, date and the number of goals scored.
+
+SELECT matchid,mdate, COUNT(player)
+  FROM game JOIN goal ON matchid = id 
+ WHERE (team1 = 'POL' OR team2 = 'POL')
+GROUP BY matchid,mdate
+
 12. For every match where 'GER' scored, show matchid, match date and the number of goals scored by 'GER'
+
+SELECT matchid, mdate, COUNT(*)
+FROM game JOIN goal ON (id=matchid)
+WHERE teamid = 'GER'
+GROUP BY matchid, mdate
+
 13. List every match with the goals scored by each team as shown. This will use "CASE WHEN" which has not been explained in any previous exercises.
+
+SELECT mdate,
+  team1,
+  SUM(CASE WHEN teamid=team1 THEN 1 ELSE 0 END) score1,
+  team2,
+  SUM(CASE WHEN teamid=team2 THEN 1 ELSE 0 END) score2
+  FROM game LEFT OUTER JOIN goal ON matchid = id
+  GROUP BY mdate,team1,team2
+
+
+1. List the films where the yr is 1962 [Show id, title]
+2. Give year of 'Citizen Kane'.
+3. List all of the Star Trek movies, include the id, title and yr (all of these movies include the words Star Trek in the title). Order results by year.
+4. What are the titles of the films with id 11768, 11955, 21191
+5. What id number does the actress 'Glenn Close' have?
+6. What is the id of the film 'Casablanca'
+7. Use movieid=11768, this is the value that you obtained in the previous question.
+8. Obtain the cast list for the film 'Alien'
+9. List the films in which 'Harrison Ford' has appeared
+10. List the films where 'Harrison Ford' has appeared - but not in the starring role. [Note: the ord field of casting gives the position of the actor. If ord=1 then this actor is in the starring role]
+11. List the films together with the leading star for all 1962 films. 
+12. Which were the busiest years for 'John Travolta', show the year and the number of movies he made each year for any year in which he made more than 2 movies.
+13. List the film title and the leading actor for all of the films 'Julie Andrews' played in.
+14. Obtain a list, in alphabetical order, of actors who've had at least 30 starring roles.
+15. List the films released in the year 1978 ordered by the number of actors in the cast.
+16. List all the people who have worked with 'Art Garfunkel'.
